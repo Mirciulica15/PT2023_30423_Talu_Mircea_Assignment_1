@@ -1,4 +1,4 @@
-package com.example.pt2023_talumircea_30433_assignment_1.Model;
+package com.example.pt2023_talumircea_30433_assignment_1.model;
 
 import java.util.*;
 

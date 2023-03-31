@@ -1,11 +1,11 @@
-package com.example.pt2023_talumircea_30433_assignment_1.Model;
+package com.example.pt2023_talumircea_30433_assignment_1.model;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class RealPolynomial {
-    private final TreeMap<Integer, Double> terms;
+    private TreeMap<Integer, Double> terms;
 
     public RealPolynomial() {
         this.terms = new TreeMap<>();
@@ -133,14 +133,14 @@ public class RealPolynomial {
     }
 
 
-    public RealPolynomial integrate() {
+    public void integrate() {
         TreeMap<Integer, Double> integratedTerms = new TreeMap<>();
         for (Map.Entry<Integer, Double> term : this.terms.entrySet()) {
             int exp = term.getKey();
             double coeff = term.getValue();
             integratedTerms.put(exp + 1, coeff / (exp + 1));
         }
-        return new RealPolynomial(integratedTerms);
+        this.terms = integratedTerms;
     }
 
     @Override
@@ -164,4 +164,5 @@ public class RealPolynomial {
         }
         return sb.toString();
     }
+
 }
