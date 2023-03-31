@@ -1,10 +1,13 @@
-package com.example.pt2023_talumircea_30433_assignment_1;
+package com.example.pt2023_talumircea_30433_assignment_1.View;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.example.pt2023_talumircea_30433_assignment_1.Model.Polynomial;
+import com.example.pt2023_talumircea_30433_assignment_1.Model.RealPolynomial;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
