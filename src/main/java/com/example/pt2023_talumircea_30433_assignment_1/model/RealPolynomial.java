@@ -39,52 +39,45 @@ public class RealPolynomial {
         return terms.get(terms.lastKey());
     }
 
-
-    public RealPolynomial multiplyByConstant(double c) {
-        TreeMap<Integer, Double> newTerms = new TreeMap<>();
-        for (Map.Entry<Integer, Double> term : terms.entrySet()) {
-            newTerms.put(term.getKey(), term.getValue() * c);
+    public RealPolynomial add(RealPolynomial other) {
+        Map<Integer, Double> addedTerms = new HashMap<>();
+        for (Map.Entry<Integer, Double> term : this.terms.entrySet()) {
+            int currentDegree = term.getKey();
+            double currentCoefficient = term.getValue();
+            addedTerms.put(currentDegree, currentCoefficient);
         }
-        return new RealPolynomial(newTerms);
+        for (Map.Entry<Integer, Double> term : other.terms.entrySet()) {
+            int currentDegree = term.getKey();
+            double currentCoefficient = term.getValue();
+            double currentSum = addedTerms.getOrDefault(currentDegree, 0.0) + currentCoefficient;
+            addedTerms.put(currentDegree, currentSum);
+        }
+        return new RealPolynomial(addedTerms);
     }
 
-    public RealPolynomial divide(RealPolynomial divisor) {
-        if (this.isZero() || divisor.isZero()) {
-            // If one polynomial is zero, return zero polynomial.
-            return new RealPolynomial();
-        }
-        System.out.println(this);
-        System.out.println(divisor);
-        Map<Integer, Double> quotientTerms = new HashMap<>();
-        RealPolynomial quotient = new RealPolynomial(quotientTerms);
-        RealPolynomial remainder = this;
-
-        int divisorDegree = divisor.getDegree();
-
-        if (divisorDegree > remainder.getDegree()) {
-            // The divisor is of a higher degree than the partial remainder,
-            // so the division cannot continue. Return the current quotient and remainder.
-            return quotient;
+    public RealPolynomial[] divide(RealPolynomial divisor) throws ArithmeticException {
+        if (divisor.isZero()) {
+            throw new ArithmeticException("Division by zero");
         }
 
-        double divisorLeadingCoefficient = divisor.getLeadingCoefficient();
+        RealPolynomial quotient = new RealPolynomial();
+        RealPolynomial remainder = new RealPolynomial(this.terms);
 
-        while (remainder.getDegree() >= divisorDegree && !remainder.isZero()) {
-            int degreeDifference = remainder.getDegree() - divisorDegree;
-            double quotientCoefficient;
-            if (divisorLeadingCoefficient != 0.0) {
-                quotientCoefficient = remainder.getLeadingCoefficient() / divisorLeadingCoefficient;
-            }
-            else {
-                // handle division by 0 case
-                quotientCoefficient = 0.0;
-            }
-            quotientTerms.put(degreeDifference, quotientCoefficient);
-            RealPolynomial term = divisor.multiplyByConstant(quotientCoefficient).multiplyByMonomial(degreeDifference, quotientCoefficient);
-            remainder = remainder.subtract(term);
+        int counter = 0;
+        while (!remainder.isZero() && remainder.getDegree() >= divisor.getDegree() && counter < 100) {
+            double quotientTerm = remainder.getLeadingCoefficient() / divisor.getLeadingCoefficient();
+            int quotientDegree = remainder.getDegree() - divisor.getDegree();
+            RealPolynomial currentTerm = new RealPolynomial();
+            currentTerm.addTermReal(quotientTerm, quotientDegree);
+            quotient = quotient.add(currentTerm);
+            remainder = remainder.subtract(divisor.multiplyByMonomial(quotientDegree, quotientTerm));
+            counter++;
         }
 
-        return quotient;
+        RealPolynomial[] result = new RealPolynomial[2];
+        result[0] = quotient;
+        result[1] = remainder;
+        return result;
     }
 
     public boolean isZero() {
@@ -131,7 +124,6 @@ public class RealPolynomial {
         }
         return new RealPolynomial(subtractedTerms);
     }
-
 
     public void integrate() {
         TreeMap<Integer, Double> integratedTerms = new TreeMap<>();

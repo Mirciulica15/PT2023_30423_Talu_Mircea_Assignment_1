@@ -37,8 +37,9 @@ public class Controller {
 
         RealPolynomial P1 = parseRealPolynomial(polynomialFirst);
         RealPolynomial P2 = parseRealPolynomial(polynomialSecond);
-        RealPolynomial resPol = P1.divide(P2);
-        return resPol.toString();
+        RealPolynomial[] resPol = P1.divide(P2);
+        System.out.println("Remainder : " + resPol[1].toString());
+        return resPol[0].toString();
     }
 
     public String derivation(String polynomialFirst) {
